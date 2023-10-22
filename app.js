@@ -1,4 +1,8 @@
+const xss = require('xss-clean');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
 const express = require('express');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -6,13 +10,35 @@ const ApiError = require('./utils/apiError');
 const ErrorController = require('./controllers/ErrorController');
 
 const app = express();
+//global middlewares...
+//set security headers
+app.use(helmet());
+//body parser
+
 app.use(express.json()); //middleware ->it is used to give 'req' to have body method containing data,usually express dont give permission directly so we have to use middlware
+//middleware to prevent nosql injection
+app.use(mongoSanitize());
+//prevents vulnerable html and js scripting
+app.use(xss());
+//prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'difficulty',
+      'price',
+      'ratingAverage',
+      'ratingsQuantity',
+    ],
+  })
+);
+//test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
 const limiter = rateLimit({
-  //limits the
+  //limits the request from a single window
   max: 200,
   windowMs: 60 * 60 * 1000,
   message: 'no more request,try again in 1 hour',

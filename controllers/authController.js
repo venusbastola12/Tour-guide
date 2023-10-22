@@ -12,6 +12,16 @@ const tokenSign = function (id) {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
+const createAndSendToken = (user, statusCode, res) => {
+  const token = tokenSign(user._id);
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
+};
 
 exports.signUp = catchAsync(async (req, res, next) => {
   const newUser = await user.create(req.body);
@@ -19,14 +29,8 @@ exports.signUp = catchAsync(async (req, res, next) => {
   // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY, {
   //   expiresIn: process.env.JWT_EXPIRES_IN,
   // });
-  const token = tokenSign(newUser._id);
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      users: newUser,
-    },
-  });
+
+  createAndSendToken(newUser, 201, res);
 });
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -41,11 +45,12 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new ApiError('your email or password doesnot match', 201));
   }
   //console.log('i am hhere');
-  const token = tokenSign(exist._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  //   const token = tokenSign(exist._id);
+  //   res.status(200).json({
+  //     status: 'success',
+  //     token,
+  //   });
+  createAndSendToken(exist, 200, res);
 });
 exports.protect = async (req, res, next) => {
   //get token and check if it is there.
@@ -166,11 +171,12 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await User.save();
 
   //console.log(User);
-  const token = tokenSign(User._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  // const token = tokenSign(User._id);
+  // res.status(200).json({
+  //   status: 'success',
+  //   token,
+  // });
+  createAndSendToken(User, 200, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -201,9 +207,10 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   User.passwordConfirm = req.body.newPasswordConfirm;
   await User.save();
 
-  const token = tokenSign(User._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  // const token = tokenSign(User._id);
+  // res.status(200).json({
+  //   status: 'success',
+  //   token,
+  // });
+  createAndSendToken(User, 200, res);
 });

@@ -14,6 +14,15 @@ const tokenSign = function (id) {
 };
 const createAndSendToken = (user, statusCode, res) => {
   const token = tokenSign(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true, //setting httpOnly:true makes the browser able to receive and send the cookie only they cannot modify,so it protects from cross site scripting.
+  };
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  res.cookie('jwt', token, cookieOptions);
+  user.password = undefined;
   res.status(statusCode).json({
     status: 'success',
     token,

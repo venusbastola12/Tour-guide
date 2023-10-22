@@ -1,3 +1,4 @@
+const rateLimit = require('express-rate-limit');
 const express = require('express');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -10,6 +11,13 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
+const limiter = rateLimit({
+  //limits the
+  max: 200,
+  windowMs: 60 * 60 * 1000,
+  message: 'no more request,try again in 1 hour',
+  standardHeaders: true,
+});
 // app.get('/api/tour', async (request, response) => {
 //   console.log('i am calling an api route');
 //   response
@@ -17,6 +25,7 @@ app.use((req, res, next) => {
 //     .json('congratulations you have connected to the tour route');
 // });
 //Routes
+app.use('/api', limiter);
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

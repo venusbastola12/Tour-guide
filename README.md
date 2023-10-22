@@ -1,2 +1,2 @@
 # Tour-guide
-# Basic backend for a tour guide app
+Basic backend for tour guide app.Implemented using nodejs,mongodb

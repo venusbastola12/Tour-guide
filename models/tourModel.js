@@ -65,6 +65,31 @@ const tourSchema = new mongoose.Schema({
     type: 'boolean',
     default: false,
   },
+  startLocation: {
+    //embeded or denormalized data sets
+    //use of geolocation values for embeding or denormalizing data sets.
+    type: {
+      type: String,
+      default: 'Point',
+      enum: ['Point'],
+    },
+    coordinates: [Number],
+    address: String,
+    description: String,
+  },
+  locations: [
+    {
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+      day: Number,
+    },
+  ],
 });
 //middlewares in mongoose.....document middleware here this refers for the document before saving to the database.
 tourSchema.pre('save', function (next) {

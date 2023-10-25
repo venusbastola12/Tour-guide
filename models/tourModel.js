@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./userModel');
 
 const tourSchema = new mongoose.Schema({
   name: {
@@ -90,12 +91,23 @@ const tourSchema = new mongoose.Schema({
       day: Number,
     },
   ],
+  guides: [
+    {
+      type: mongoose.Schema.ObjectId, //this is the way to use child referencing here the reference to the user object will only be stored.
+      ref: 'User',
+    },
+  ],
 });
 //middlewares in mongoose.....document middleware here this refers for the document before saving to the database.
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { toupper: true });
   next();
 });
+// tourSchema.pre('save',async function(next){    //in this way we can embed the user who are guide into the tour documets..
+//   const guidesPromises=this.guides.map( async id=>await user.findById(id))
+//   this.guides= await Promise.all(guidesPromises);
+//   next();
+// })
 
 //query middlewares..here this refers for queryObject
 tourSchema.pre(/^find/, function (next) {

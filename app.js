@@ -6,6 +6,7 @@ const hpp = require('hpp');
 const express = require('express');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 const ApiError = require('./utils/apiError');
 const ErrorController = require('./controllers/ErrorController');
 
@@ -55,6 +56,7 @@ app.use('/api', limiter);
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 app.all('*', (req, res, next) => {
   // res.status(404).json({

@@ -3,6 +3,7 @@ const Tour = require('../models/tourModel');
 const ApiFeatures = require('../utils/apiFeatures');
 const ApiError = require('../utils/apiError');
 const catchAsync = require('../utils/catchAsync');
+const Factory = require('./Factory');
 
 // const tours = JSON.parse(
 //   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, 'utf-8')
@@ -176,19 +177,19 @@ exports.updateTour = catchAsync(async (req, res, next) => {
   //   });
   // }
 });
-exports.deleteTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findByIdAndDelete(req.params.id);
-  if (!tour) {
-    return next(new ApiError('Tour not found', 404));
-  }
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'error',
-  //     message: 'no data to delete',
-  //   });
-  // }
-});
+// exports.deleteTour = catchAsync(async (req, res, next) => {
+//   const tour = await Tour.findByIdAndDelete(req.params.id);
+//   if (!tour) {
+//     return next(new ApiError('Tour not found', 404));
+//   }
+//   res.status(204).json({
+//     status: 'success',
+//     data: null,
+//   });
+exports.deleteTour = Factory.deleteOne(Tour);
+// } catch (err) {
+//   res.status(404).json({
+//     status: 'error',
+//     message: 'no data to delete',
+//   });
+// }

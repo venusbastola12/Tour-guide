@@ -1,10 +1,11 @@
 const express = require('express');
 const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
-const reviewController = require('../controllers/reviewController');
+const reviewRouter = require('./reviewRoutes');
 
 const tourRouter = express.Router();
 //tourRouter.param('id', tourController.checkId); //param middleware
+tourRouter.use('/:id/reviews', reviewRouter); //here we mount the given url with reviewRouter.so the route is redirected to the reviewRouter.
 tourRouter
   .route('/top_5_tours')
   .get(tourController.aliasTours, tourController.getTours);
@@ -25,12 +26,12 @@ tourRouter
     authController.restrictTo('lead-guide', 'admin'),
     tourController.deleteTour
   );
-tourRouter
-  .route('/:id/reviews')
-  .post(
-    authController.protect,
-    authController.restrictTo('user'),
-    reviewController.createReview
-  );
+// tourRouter
+//   .route('/:id/reviews')
+//   .post(
+//     authController.protect,
+//     authController.restrictTo('user'),
+//     reviewController.createReview
+//   );
 
 module.exports = tourRouter;

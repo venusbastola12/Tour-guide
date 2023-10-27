@@ -1,6 +1,7 @@
 const express = require('express');
 const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
+const reviewController = require('../controllers/reviewController');
 
 const tourRouter = express.Router();
 //tourRouter.param('id', tourController.checkId); //param middleware
@@ -23,6 +24,13 @@ tourRouter
     authController.protect,
     authController.restrictTo('lead-guide', 'admin'),
     tourController.deleteTour
+  );
+tourRouter
+  .route('/:id/reviews')
+  .post(
+    authController.protect,
+    authController.restrictTo('user'),
+    reviewController.createReview
   );
 
 module.exports = tourRouter;

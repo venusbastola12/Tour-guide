@@ -11,18 +11,6 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getUsers = catchAsync(async (req, res) => {
-  const users = await user.find();
-
-  res.status(200).json({
-    status: 'success',
-    length: `${users.length}`,
-
-    data: {
-      users,
-    },
-  });
-});
 exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.confirmPassword) {
     return next(
@@ -56,30 +44,14 @@ exports.deleteMe = catchAsync(async (req, res) => {
     },
   });
 });
-exports.getUser = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'data yet not fetched from the file',
-  });
-};
+
 exports.newUser = (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'data yet not fetched from the file',
   });
 };
-// exports.updateUser = catchAsync(async (req, res, next) => {
-//   const currentUser = await user.findByIdAndUpdate(req.params.id, req.body);
-//   if (!currentUser) {
-//     return next(new ApiError('no user found', 400));
-//   }
-
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       currentUser,
-//     },
-//   });
-// });
+exports.getUsers = Factory.getAll(user);
+exports.getUser = Factory.getOne(user);
 exports.updateUser = Factory.updateOne(user);
 exports.deleteUser = Factory.deleteOne(user);

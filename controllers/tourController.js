@@ -89,51 +89,8 @@ exports.getMonthlyPlan = catchAsync(async (req, res) => {
   //next();
 });
 
-exports.getTours = catchAsync(async (req, res) => {
-  //aliasing...mostly we do it for accessing the url that is requested quite rapidly..
-  //created middleware that will give the default values for the sort ,limit and fields when the repetitive route is being invoked.
-
-  const apiFeatures = new ApiFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitField()
-    .paginate();
-  const tours = await apiFeatures.query;
-
-  res.status(200).json({
-    status: 'success',
-    length: `${tours.length}`,
-
-    data: {
-      tours,
-    },
-  });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'error',
-  //     message: err.message,
-  //   });
-  // }
-});
-exports.getTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id).populate('reviews');
-  if (!tour) {
-    return next(new ApiError('Tour not found', 404));
-  }
-  //const tour = Array.from(tours).find((el) => el.id === req.params.id * 1);
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'error',
-  //     message: 'invalid data sent',
-  //   });
-  // }
-});
+exports.getTours = Factory.getAll(Tour);
+exports.getTour = Factory.getOne(Tour, { path: 'reviews' });
 exports.createTour = Factory.createOne(Tour);
 exports.updateTour = Factory.updateOne(Tour);
 exports.deleteTour = Factory.deleteOne(Tour);

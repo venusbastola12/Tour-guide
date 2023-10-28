@@ -8,7 +8,10 @@ reviewRouter.post(
   '/',
   authController.protect,
   authController.restrictTo('user'),
+  reviewController.setTourAndUser,
   reviewController.createReview
 );
+reviewRouter.delete('/:id', reviewController.deleteReview);
 
+reviewRouter.patch('/:id', reviewController.updateReview);
 module.exports = reviewRouter;

@@ -134,62 +134,6 @@ exports.getTour = catchAsync(async (req, res, next) => {
   //   });
   // }
 });
-exports.createTour = catchAsync(async (req, res) => {
-  const newTour = await Tour.create(req.body);
-  //console.log(req.body);
-  //const newId = tours[tours.length - 1].id + 1;
-  //const newTour = Object.assign(req.body, { id: newId });
-  //tours.push(newTour);
-  res.status(201).json({
-    status: 'success',
-    data: {
-      tours: newTour,
-    },
-  });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'error',
-  //     message: err,
-  //   });
-  // }
-});
-exports.updateTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  if (!tour) {
-    return next(new ApiError('Tour not found', 404));
-  }
-
-  //const tour = Array.from(tours).find((el) => el.id === req.params.id * 1);
-  // const updatedTour = { ...tour, difficulty: 'medium' };
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'error',
-  //     message: 'incorrect data sent as a update',
-  //   });
-  // }
-});
-// exports.deleteTour = catchAsync(async (req, res, next) => {
-//   const tour = await Tour.findByIdAndDelete(req.params.id);
-//   if (!tour) {
-//     return next(new ApiError('Tour not found', 404));
-//   }
-//   res.status(204).json({
-//     status: 'success',
-//     data: null,
-//   });
+exports.createTour = Factory.createOne(Tour);
+exports.updateTour = Factory.updateOne(Tour);
 exports.deleteTour = Factory.deleteOne(Tour);
-// } catch (err) {
-//   res.status(404).json({
-//     status: 'error',
-//     message: 'no data to delete',
-//   });
-// }

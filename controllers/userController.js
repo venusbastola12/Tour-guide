@@ -1,6 +1,7 @@
 const user = require('../models/userModel');
 const ApiError = require('../utils/apiError');
 const catchAsync = require('../utils/catchAsync');
+const Factory = require('./Factory');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -67,16 +68,18 @@ exports.newUser = (req, res) => {
     message: 'data yet not fetched from the file',
   });
 };
-exports.updateUser = catchAsync(async (req, res, next) => {
-  const currentUser = await user.findByIdAndUpdate(req.params.id, req.body);
-  if (!currentUser) {
-    return next(new ApiError('no user found', 400));
-  }
+// exports.updateUser = catchAsync(async (req, res, next) => {
+//   const currentUser = await user.findByIdAndUpdate(req.params.id, req.body);
+//   if (!currentUser) {
+//     return next(new ApiError('no user found', 400));
+//   }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      currentUser,
-    },
-  });
-});
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       currentUser,
+//     },
+//   });
+// });
+exports.updateUser = Factory.updateOne(user);
+exports.deleteUser = Factory.deleteOne(user);
